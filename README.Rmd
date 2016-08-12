@@ -60,6 +60,97 @@ df_2 <- group_by(df_1, ID, Group)
 summarise(df_2, mean = mean(Value))
 
 ```
+```{r}
 
+```
+# Chicken weights
+## Null Hypothesis
+* the chick weights are not dependent on the feed
+
+## ALternative Hypothesis
+* the chick weights are dependent on the feed
+```{r data_tidy, echo=TRUE}
+# Read chick-weights.csv
+x <- read.csv("chick-weights.csv")
+
+# Tidy chick-weights data using boxplot
+boxplot(x$weight ~ x$feed)
+
+# State null and alternative hypotheses
+"H0 : the chick weights are dependent on the feed" 
+"H1 : the chick weights are not dependent on the feed"
+
+# State and run statistical test
+chickanova <- aov(weight~feed, data = x)
+summary(chickanova)
+
+# Comparing means of three or more groups
+
+# State degree of freedom and p-value
+Df = 5
+'p-value <0.05'
+"Reject null hypothesis and accept alternative hypothesis"
+
+```
+# The Hot Zone
+## Null hypothesis
+* water contamination does not cause gastroenteritis
+
+## Alternative hypothesis
+* water contamination does cause gastroenteritis
+```{r the hot zone echo=TRUE}
+# Read gastroenteritis data
+x <- read.csv("gastroenteritis.csv")
+
+# Tidy gastroenteritis data using scatter plot
+y <- xtabs(~Consumption + Outcome, data=x)
+y
+
+#Plot barplot
+barplot(y, beside = TRUE, ylab = 'water consumption', xlab = 'clinical outcome', main = 'Gastroenteritis', col = c('pink', 'turquoise', 'grey'))
+legend ('top', c('< 1 glasses/day', '< 4 glasses/day', '1 to 4 glasses/day'), fill = c('pink', 'turquoise', 'grey'))
+
+# Statistical test
+z <- chisq.test(y, correct = TRUE)
+z
+```
+## Test assumptions
+* determining whether there is an association between 2 variables
+* analysing 2 catagorical variables
+
+## Outcome Interpretation
+* df = 2 
+* p-value <0.05, therefore, reject the null hypothesis and accept the alternative hypothesis
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+# Nausea
+## Null hypothesis
+* Receiving emetogenic chemotherapy does not cause nausea
+
+## Alternative hypothesis
+* Receiving emetogenic chemotherapy does cause nausea
+```{r Nausea echo=TRUE}
+# Read Nausea data
+x <- read.csv("nausea.csv")
+
+# Tidy data
+## changed data point that was incorrect
+x[8,3]=4
+x
+
+#Plotting data
+plot(x$Nausea_before ~ x$Patient, type = "l", ylim = c(0,6), xlab = 'Patient', ylab = 'Nausea_intensity', main = 'Nausea intensity decreases with treatment', col= 'purple')
+lines(x$Nausea_after)
+legend ('top', c('Nausea_before', 'Nausea_after'), fill = c('purple', 'black'))
+
+# Statistical test
+wilcox.test(x$Nausea_before, x$Nausea_after, paired = TRUE)
+
+```
+## Test assumptions
+* Data is paired, and non-parametric
+* Two pairs of measurements taken on same experimental group
+
+## Outcome interpretation
+* Df = 7
+* p-value <0.05, therefore reject null hypothesis and accept alternative hypothesis
