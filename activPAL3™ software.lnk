@@ -53,50 +53,55 @@ tail(df, n=6)
 summary(df)
 ```
 
-```{r echo=TRUE}
-
+```{r data_tidy, echo=TRUE}
+library(tidyr)
 df_1 <- gather(df, key = Measures, value = Value, Measurement_1, Measurement_2, Measurement_3, -ID)
 df_2 <- group_by(df_1, ID, Group)
 summarise(df_2, mean = mean(Value))
 
 ```
+```{r}
 
+```
 # Chicken weights
 ## Null Hypothesis
 * the chick weights are not dependent on the feed
 
 ## ALternative Hypothesis
 * the chick weights are dependent on the feed
-```{r echo=TRUE}
-# Read chick-weights.csv
+```{r data_tidy, echo=TRUE}
+library(readr)
+library(tidyr)
+library(dplyr)
+
+# Read chick weights
 x <- read.csv("chick-weights.csv")
 
 # Tidy chick-weights data using boxplot
 boxplot(x$weight ~ x$feed)
 
-# State null and alternative hypotheses
-"H0 : the chick weights are dependent on the feed" 
-"H1 : the chick weights are not dependent on the feed"
-
 # State and run statistical test
 chickanova <- aov(weight~feed, data = x)
 summary(chickanova)
 
-# Comparing means of three or more groups
+# Stats assumption
+ "Comparing means of three or more groups"
 
 # State degree of freedom and p-value
 Df = 5
 'p-value <0.05'
-"Reject null hypothesis and accept alternative hypothesis"
+
 
 ```
+*"Reject null hypothesis and accept alternative hypothesis"
+
 # The Hot Zone
 ## Null hypothesis
 * water contamination does not cause gastroenteritis
 
 ## Alternative hypothesis
 * water contamination does cause gastroenteritis
-```{r echo=TRUE}
+```{r the hot zone echo=TRUE}
 # Read gastroenteritis data
 x <- read.csv("gastroenteritis.csv")
 
@@ -127,9 +132,14 @@ Note that the `echo = FALSE` parameter was added to the code chunk to prevent pr
 
 ## Alternative hypothesis
 * Receiving emetogenic chemotherapy does cause nausea
-```{r echo=TRUE}
+```{r Nausea echo=TRUE}
 # Read Nausea data
 x <- read.csv("nausea.csv")
+
+# Tidy data
+## changed data point that was incorrect
+x[8,3]=4
+x
 
 #Plotting data
 plot(x$Nausea_before ~ x$Patient, type = "l", ylim = c(0,6), xlab = 'Patient', ylab = 'Nausea_intensity', main = 'Nausea intensity decreases with treatment', col= 'purple')

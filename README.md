@@ -167,7 +167,6 @@ summary(df)
     ##  Max.   :30.00
 
 ``` r
-library(tidyr)
 df_1 <- gather(df, key = Measures, value = Value, Measurement_1, Measurement_2, Measurement_3, -ID)
 df_2 <- group_by(df_1, ID, Group)
 summarise(df_2, mean = mean(Value))
@@ -190,4 +189,172 @@ summarise(df_2, mean = mean(Value))
     ## 10    10 Analgesic 24.00000
     ## # ... with 30 more rows
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+Chicken weights
+===============
+
+Null Hypothesis
+---------------
+
+-   the chick weights are not dependent on the feed
+
+ALternative Hypothesis
+----------------------
+
+-   the chick weights are dependent on the feed
+
+``` r
+# Read chick-weights.csv
+x <- read.csv("chick-weights.csv")
+
+# Tidy chick-weights data using boxplot
+boxplot(x$weight ~ x$feed)
+```
+
+![](README_files/figure-markdown_github/unnamed-chunk-2-1.png)
+
+``` r
+# State null and alternative hypotheses
+"H0 : the chick weights are dependent on the feed" 
+```
+
+    ## [1] "H0 : the chick weights are dependent on the feed"
+
+``` r
+"H1 : the chick weights are not dependent on the feed"
+```
+
+    ## [1] "H1 : the chick weights are not dependent on the feed"
+
+``` r
+# State and run statistical test
+chickanova <- aov(weight~feed, data = x)
+summary(chickanova)
+```
+
+    ##             Df Sum Sq Mean Sq F value   Pr(>F)    
+    ## feed         5 231129   46226   15.37 5.94e-10 ***
+    ## Residuals   65 195556    3009                     
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+``` r
+# Comparing means of three or more groups
+
+# State degree of freedom and p-value
+Df = 5
+'p-value <0.05'
+```
+
+    ## [1] "p-value <0.05"
+
+``` r
+"Reject null hypothesis and accept alternative hypothesis"
+```
+
+    ## [1] "Reject null hypothesis and accept alternative hypothesis"
+
+The Hot Zone
+============
+
+Null hypothesis
+---------------
+
+-   water contamination does not cause gastroenteritis
+
+Alternative hypothesis
+----------------------
+
+-   water contamination does cause gastroenteritis
+
+``` r
+# Read gastroenteritis data
+x <- read.csv("gastroenteritis.csv")
+
+# Tidy gastroenteritis data using scatter plot
+y <- xtabs(~Consumption + Outcome, data=x)
+y
+```
+
+    ##                     Outcome
+    ## Consumption          ill not ill
+    ##   < 1 glasses/day     39     121
+    ##   > 4 glasses/day    265     146
+    ##   1 to 4 glasses/day 265     258
+
+``` r
+#Plot barplot
+barplot(y, beside = TRUE, ylab = 'water consumption', xlab = 'clinical outcome', main = 'Gastroenteritis', col = c('pink', 'turquoise', 'grey'))
+legend ('top', c('< 1 glasses/day', '> 4 glasses/day', '1 to 4 glasses/day'), fill = c('pink', 'turquoise', 'grey'))
+```
+
+![](README_files/figure-markdown_github/unnamed-chunk-3-1.png)
+
+``` r
+# Statistical test
+z <- chisq.test(y, correct = TRUE)
+z
+```
+
+    ## 
+    ##  Pearson's Chi-squared test
+    ## 
+    ## data:  y
+    ## X-squared = 74.925, df = 2, p-value < 2.2e-16
+
+Test assumptions
+----------------
+
+-   determining whether there is an association between 2 variables
+-   analysing 2 catagorical variables
+
+Outcome Interpretation
+----------------------
+
+-   df = 2
+-   p-value &lt;0.05, therefore, reject the null hypothesis and accept the alternative hypothesis
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot. \# Nausea \#\# Null hypothesis \* Receiving emetogenic chemotherapy does not cause nausea
+
+Alternative hypothesis
+----------------------
+
+-   Receiving emetogenic chemotherapy does cause nausea
+
+``` r
+# Read Nausea data
+x <- read.csv("nausea.csv")
+
+#Plotting data
+plot(x$Nausea_before ~ x$Patient, type = "l", ylim = c(0,6), xlab = 'Patient', ylab = 'Nausea_intensity', main = 'Nausea intensity decreases with treatment', col= 'purple')
+lines(x$Nausea_after)
+legend ('top', c('Nausea_before', 'Nausea_after'), fill = c('purple', 'black'))
+```
+
+![](README_files/figure-markdown_github/unnamed-chunk-4-1.png)
+
+``` r
+# Statistical test
+wilcox.test(x$Nausea_before, x$Nausea_after, paired = TRUE)
+```
+
+    ## Warning in wilcox.test.default(x$Nausea_before, x$Nausea_after, paired =
+    ## TRUE): cannot compute exact p-value with ties
+
+    ## 
+    ##  Wilcoxon signed rank test with continuity correction
+    ## 
+    ## data:  x$Nausea_before and x$Nausea_after
+    ## V = 26, p-value = 0.2906
+    ## alternative hypothesis: true location shift is not equal to 0
+
+Test assumptions
+----------------
+
+-   Data is paired, and non-parametric
+-   Two pairs of measurements taken on same experimental group
+
+Outcome interpretation
+----------------------
+
+-   Df = 7
+-   p-value &lt;0.05, therefore reject null hypothesis and accept alternative hypothesis
