@@ -147,3 +147,45 @@ wilcox.test(x$Nausea_before, x$Nausea_after, paired = TRUE)
 ## Outcome interpretation
 * Df = 7
 * p-value <0.05, therefore reject null hypothesis and accept alternative hypothesis
+
+#Housing Prices
+```{r echo = TRUE}
+# Import dataset
+goo <- read.csv("housing-prices.csv")
+goo
+
+interest = goo$interest_rate
+house_price = goo$median_house_price_USD
+head(cbind(interest, house_price))
+
+plot(interest, house_price, xlab = "interest_rate", ylab = "median_house_price_USD", pch = 19, col = 'grey', main = 'Interest Rate decreases Housing Price')
+abline(lm(goo$median_house_price_USD ~ goo$interest_rate,data = goo), col= 'pink', lwd = 2)
+
+# Linear regression
+ goo1 <- lm(goo$median_house_price_USD ~ goo$interest_rate, data = goo)
+ summary(goo1)
+ 
+ # Diagnostic plot 1
+ plot(x = goo1$fitted.values, y = goo1$residuals, main = 'Homoskedasticity', pch = 19, col = 'grey')
+ abline(h = 0, col = 'pink', lwd = 3)
+ 
+ # Diagbnostic plot 2: gaussian residual distribution
+ qqnorm(goo1$residuals)
+ qqline(goo1$residuals)
+ 
+ # Binary outcome variabe
+ glm( goo$median_house_price_USD ~ goo$interest_rate, data = goo)
+```
+##Null hypothesis: the housing price is not dependent on the interest rate
+##Alternative hypothesis: the housing price is dependent on the interest rate
+
+## Analysis Assumption:
+*Ran scatter plot to see trend 
+*Diagnostics for linear regression; QQ-plot to determine whether the residuals are normally distributed and the guassian residual distribution to determine the variance for all the fitted values.
+*GLM was used as the diagnostics were not bormally distributed and did not fit along the line of best fit.
+
+## Test interpretation
+*F-statistic : 6.974 on 1
+*p-value = 0.01937, therefore reject H0 and accept the alternative hypothesis.
+*DF: 14
+

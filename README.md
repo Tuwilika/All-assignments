@@ -358,3 +358,129 @@ Outcome interpretation
 
 -   Df = 7
 -   p-value &lt;0.05, therefore reject null hypothesis and accept alternative hypothesis
+
+Housing Prices
+==============
+
+``` r
+# Import dataset
+goo <- read.csv("housing-prices.csv")
+goo
+```
+
+    ##    interest_rate median_house_price_USD
+    ## 1             10                 183800
+    ## 2             10                 183200
+    ## 3             10                 174900
+    ## 4              9                 173500
+    ## 5              8                 172900
+    ## 6              7                 173200
+    ## 7              8                 173200
+    ## 8              8                 169700
+    ## 9              8                 174500
+    ## 10             8                 177900
+    ## 11             7                 188100
+    ## 12             7                 203200
+    ## 13             8                 230200
+    ## 14             7                 258200
+    ## 15             7                 309800
+    ## 16             6                 329800
+    ## 17            NA                     NA
+
+``` r
+interest = goo$interest_rate
+house_price = goo$median_house_price_USD
+head(cbind(interest, house_price))
+```
+
+    ##      interest house_price
+    ## [1,]       10      183800
+    ## [2,]       10      183200
+    ## [3,]       10      174900
+    ## [4,]        9      173500
+    ## [5,]        8      172900
+    ## [6,]        7      173200
+
+``` r
+plot(interest, house_price, xlab = "interest_rate", ylab = "median_house_price_USD", pch = 19, col = 'grey', main = 'Interest Rate decreases Housing Price')
+abline(lm(goo$median_house_price_USD ~ goo$interest_rate,data = goo), col= 'pink', lwd = 2)
+```
+
+![](README_files/figure-markdown_github/unnamed-chunk-5-1.png)
+
+``` r
+# Linear regression
+ goo1 <- lm(goo$median_house_price_USD ~ goo$interest_rate, data = goo)
+ summary(goo1)
+```
+
+    ## 
+    ## Call:
+    ## lm(formula = goo$median_house_price_USD ~ goo$interest_rate, 
+    ##     data = goo)
+    ## 
+    ## Residuals:
+    ##    Min     1Q Median     3Q    Max 
+    ## -55865 -31631 -16406  27212  80735 
+    ## 
+    ## Coefficients:
+    ##                   Estimate Std. Error t value Pr(>|t|)    
+    ## (Intercept)         399229      74427   5.364 9.99e-05 ***
+    ## goo$interest_rate   -24309       9205  -2.641   0.0194 *  
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## Residual standard error: 43180 on 14 degrees of freedom
+    ##   (1 observation deleted due to missingness)
+    ## Multiple R-squared:  0.3325, Adjusted R-squared:  0.2848 
+    ## F-statistic: 6.974 on 1 and 14 DF,  p-value: 0.01937
+
+``` r
+ # Diagnostic plot 1
+ plot(x = goo1$fitted.values, y = goo1$residuals, main = 'Homoskedasticity', pch = 19, col = 'grey')
+ abline(h = 0, col = 'pink', lwd = 3)
+```
+
+![](README_files/figure-markdown_github/unnamed-chunk-5-2.png)
+
+``` r
+ # Diagbnostic plot 2: gaussian residual distribution
+ qqnorm(goo1$residuals)
+ qqline(goo1$residuals)
+```
+
+![](README_files/figure-markdown_github/unnamed-chunk-5-3.png)
+
+``` r
+ # Binary outcome variabe
+ glm( goo$median_house_price_USD ~ goo$interest_rate, data = goo)
+```
+
+    ## 
+    ## Call:  glm(formula = goo$median_house_price_USD ~ goo$interest_rate, 
+    ##     data = goo)
+    ## 
+    ## Coefficients:
+    ##       (Intercept)  goo$interest_rate  
+    ##            399229             -24309  
+    ## 
+    ## Degrees of Freedom: 15 Total (i.e. Null);  14 Residual
+    ##   (1 observation deleted due to missingness)
+    ## Null Deviance:       3.91e+10 
+    ## Residual Deviance: 2.61e+10  AIC: 390.8
+
+Null hypothesis: the housing price is not dependent on the interest rate
+------------------------------------------------------------------------
+
+Alternative hypothesis: the housing price is dependent on the interest rate
+---------------------------------------------------------------------------
+
+Analysis Assumption:
+--------------------
+
+*Ran scatter plot to see trend *Diagnostics for linear regression; QQ-plot to determine whether the residuals are normally distributed and the guassian residual distribution to determine the variance for all the fitted values. \*GLM was used as the diagnostics were not bormally distributed and did not fit along the line of best fit.
+
+Test interpretation
+-------------------
+
+*F-statistic : 6.974 on 1 *p-value = 0.01937, therefore reject H0 and accept the alternative hypothesis. \*DF: 14
