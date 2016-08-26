@@ -478,9 +478,13 @@ Alternative hypothesis: the housing price is dependent on the interest rate
 Analysis Assumption:
 --------------------
 
-*Ran scatter plot to see trend *Diagnostics for linear regression; QQ-plot to determine whether the residuals are normally distributed and the guassian residual distribution to determine the variance for all the fitted values. \*GLM was used as the diagnostics were not bormally distributed and did not fit along the line of best fit.
+-   Ran scatter plot to see trend
+-   Diagnostics for linear regression; QQ-plot to determine whether the residuals are normally distributed and the guassian residual distribution to determine the variance for all the fitted values.
+-   GLM was used as the diagnostics were not bormally distributed and did not fit along the line of best fit.
 
 Test interpretation
 -------------------
 
-*F-statistic : 6.974 on 1 *p-value = 0.01937, therefore reject H0 and accept the alternative hypothesis. \*DF: 14
+-   F-statistic : 6.974 on 1
+-   p-value = 0.01937, therefore reject H0 and accept the alternative hypothesis.
+-   DF: 14
